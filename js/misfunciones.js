@@ -78,9 +78,15 @@ function updateCarrito(){
         // cartProductos.forEach(producto => {
         //     totalfor += producto.price
         // })
+    
+    if (cartProductos.length === 0){
+        contador.textContent = ''
+    }else{
+        cont++
+        contador.textContent = cartProductos.length
+    }
 
-    cont++
-    contador.textContent = cartProductos.length
+    guardarCarrito()
 }
 
 function eliminarDelCarrito(indice){
@@ -94,4 +100,18 @@ mostrarCarrito.addEventListener("click", () => {
     carrito.classList.toggle("open")
 })
 
+function guardarCarrito(){
+    // GUARDA INFO EN EL LOCAL STORAGE
+    localStorage.setItem('carrito', JSON.stringify(cartProductos))
+}
+
+function cargarCarrito(){
+    const carritoGuardado = localStorage.getItem('carrito')
+    if(carritoGuardado){
+        cartProductos = JSON.parse(carritoGuardado)
+        updateCarrito()
+    }
+}
+
+cargarCarrito()
 renderizarProductos()
