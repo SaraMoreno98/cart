@@ -13,7 +13,13 @@ const products = [
     { id: 12, name: "Vestido", price: 39.99, image: "../img/vestido3.jpeg", sizes: ["38", "39", "40", "41", "42"] },
 ]
 
-const productosContainer = document.getElementById('products')
+const productosContainer = document.getElementById ('products')
+const itemCarrito = document.getElementById ('cart-items')
+const mostrarCarrito = document.getElementById ('toggle-cart')
+const carrito = document.getElementById ('cart')
+const totalCarrito = document.getElementById ('cart-total')
+
+let cartProductos = []
 
 function renderizarProductos(){
     let productosHTML = products.map(producto => `
@@ -21,7 +27,7 @@ function renderizarProductos(){
             <img src="${producto.image}" alt="${producto.name}">
             <h3>${producto.name}</h3>
             <p>Precio: ${producto.price}€</p>
-            <select id="${products.id}">
+            <select id="size-${producto.id}">
                 ${producto.sizes.map(size => `<option value="${size}">${size}</option>`)}
             </select>
             <button onclick="addCarrito(${producto.id})">Añadir al carrito</button>
@@ -30,10 +36,6 @@ function renderizarProductos(){
 
     let productosJuntos = productosHTML.join(' ')
     productosContainer.innerHTML = productosJuntos
-}
-
-function addCarrito(productoId){
-    alert(`Producto ${productoId} añadido`)
 }
 
 // function renderizarProductos(){
@@ -45,5 +47,46 @@ function addCarrito(productoId){
 //         </div>    
 //     `).join(' ')
 // }
+
+
+function addCarrito(productoId){
+    const productoCesta = products.find(producto => producto.id === productoId)
+
+    const size = document.getElementById(`size-${productoCesta.id}`).value
+
+    cartProductos.push({...productoCesta, size})
+    console.log (cartProductos)
+    // CADA VEZ QUE AÑADIMOS UN PRODUCTO LLAMAMOS A LA FUNCION UNPDATE CARRITO
+    updateCarrito()
+}
+
+function updateCarrito(){
+    itemCarrito.innerHTML = cartProductos.map((item, index) => `
+        <div class="cart-item">
+            <span>${item.name} ${item.size} - ${item.price.toFixed(2)}€</span>
+            <button onclick="eliminarDelCarrito(${index})">Eliminar</button>
+        </div>
+    `).join('')
+
+    const total = cartProductos.reduce((sum, item) => sum + item.price, 0)
+    totalCarrito.textContent = `Total ${total.toFixed(2)}€`
+
+    // OTRA FORMA DE SUMAR LOS PRECIOS
+        // let totalfor = 0
+        // cartProductos.forEach(producto => {
+        //     totalfor += producto.price
+        // })
+}
+
+function eliminarDelCarrito(indice){
+    cartProductos.splice(indice, 1)
+
+    updateCarrito()
+}
+
+mostrarCarrito.addEventListener("click", () => {
+    // ESTA LINEA HACE QUE AL PICHAR EN EL CARRITO SE AÑADA UNA CLASE QUE ABRE O CIERRA EL CARRITO SEGUN LE CLICAMOS
+    carrito.classList.toggle("open")
+})
 
 renderizarProductos()
