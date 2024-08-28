@@ -18,6 +18,8 @@ const itemCarrito = document.getElementById ('cart-items')
 const mostrarCarrito = document.getElementById ('toggle-cart')
 const carrito = document.getElementById ('cart')
 const totalCarrito = document.getElementById ('cart-total')
+const contador = document.getElementById('contador')
+let cont = 0
 
 let cartProductos = []
 
@@ -76,6 +78,9 @@ function updateCarrito(){
         // cartProductos.forEach(producto => {
         //     totalfor += producto.price
         // })
+
+    cont++
+    contador.textContent = cartProductos.length
 }
 
 function eliminarDelCarrito(indice){
